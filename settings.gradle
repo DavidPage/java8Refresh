@@ -1,2 +1,5 @@
 rootProject.name = 'java8Refresh'
 
+include 'streams'
+include 'streams'
+

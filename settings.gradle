@@ -1,5 +1,8 @@
 rootProject.name = 'java8Refresh'
 
 include 'streams'
-include 'streams'
+
+include 'predicates'
+
+include 'strategy'
 

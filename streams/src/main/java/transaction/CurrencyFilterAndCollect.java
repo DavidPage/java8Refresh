@@ -3,7 +3,6 @@ package transaction;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static transaction.Currency.Builder.aCurrency;
 import static transaction.Transaction.Builder.aTransaction;
 
@@ -11,19 +10,18 @@ public class CurrencyFilterAndCollect {
 
     public static void main(String[] args) {
 
-
         final Currency pounds = aCurrency().withCurrencySymbol("pound").build();
         final Currency euro = aCurrency().withCurrencySymbol("€").build();
 
-        final Transaction pounds1000 = aTransaction().withAmount(1000).withCurrency(pounds).build();
-        final Transaction pounds2000 = aTransaction().withAmount(2000).withCurrency(pounds).build();
-        final Transaction pounds500 = aTransaction().withAmount(500).withCurrency(pounds).build();
+        List<Transaction> transactions = new LinkedList();
 
-        final Transaction euro1000 = aTransaction().withAmount(1000).withCurrency(euro).build();
-        final Transaction euro2000 = aTransaction().withAmount(2000).withCurrency(euro).build();
-        final Transaction euro500 = aTransaction().withAmount(500).withCurrency(euro).build();
+        for (int poundsTransactions = 0; poundsTransactions < 1000000; poundsTransactions++) {
+            transactions.add(aTransaction().withAmount(poundsTransactions).withCurrency(pounds).build());
+        }
 
-        final List<Transaction> transactions = asList(pounds500, pounds1000, pounds2000, euro500, euro1000, euro2000);
+        for (int euroTransactions = 0; euroTransactions < 1000000; euroTransactions++) {
+            transactions.add(aTransaction().withAmount(euroTransactions).withCurrency(euro).build());
+        }
 
         Map<Currency, List<Transaction>> transactionsByCurrency = new HashMap<>();
 
@@ -47,7 +45,7 @@ public class CurrencyFilterAndCollect {
 
         long end = System.currentTimeMillis();
 
-        System.out.println("regular took: " + (end - start) + " grouped transactions" + transactionsByCurrency.toString());
+        System.out.println("regular took: " + (end - start) + " grouped transactions");
 
 
         start = System.currentTimeMillis();
@@ -56,6 +54,6 @@ public class CurrencyFilterAndCollect {
 
         transactions.sort(Comparator.comparingInt(Transaction::getAmount));
 
-        System.out.println("streams took: " + (end - start) + " grouped transactions" + collect.toString());
+        System.out.println("parallel took: " + (end - start) + " grouped transactions");
     }
 }
